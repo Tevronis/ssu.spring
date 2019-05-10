@@ -3,18 +3,27 @@ package ssu.org.epam.service;
 import org.springframework.stereotype.Service;
 import ssu.org.epam.model.DbHandler;
 import ssu.org.epam.model.Employee;
+import ssu.org.epam.model.Project;
 
 import java.sql.SQLException;
 import java.util.List;
 
 @Service
 public class OfficeManagementService {
-    public Boolean addEmployee(Employee employee) {
-        // verify
-        // open db
-        // set to db
-        // close to db
-        return true;
+
+    public String addEmployee(Employee employee) {
+        String validatin_response = employee.validation();
+        if (!validatin_response.equals("ok")) {
+            return validatin_response;
+        }
+        try {
+            DbHandler dbHandler = DbHandler.getInstance();
+            dbHandler.addEmployee(employee);
+            return "ok";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "err";
     }
 
     public String getAllEmployees(Boolean onlyfio) {
@@ -56,7 +65,6 @@ public class OfficeManagementService {
     public String getEmployee(String name, String lastname) {
         String errMsg = "Current employee have been not created.";
         try {
-            System.out.println(name + " " + lastname);
             DbHandler dbHandler = DbHandler.getInstance();
             List<Employee> response = dbHandler.getEmployee(name, lastname);
             StringBuilder sb = new StringBuilder();
@@ -72,22 +80,62 @@ public class OfficeManagementService {
     }
 
     public String assignEmployee(String project, Long userId) {
-        return "";
+        String errMsg = "Current employee have been not created.";
+        try {
+            DbHandler dbHandler = DbHandler.getInstance();
+            dbHandler.assignEmployee(Project.valueOf(project), userId);
+            return "ok";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "err";
     }
 
     public String unassignEmployee(String project, Long userId) {
-        return "";
+        String errMsg = "Current employee have been not created.";
+        try {
+            DbHandler dbHandler = DbHandler.getInstance();
+            dbHandler.unassignEmployee(Project.valueOf(project), userId);
+            return "ok";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "err";
     }
 
     public String upsalary(Long upsalary, Long userId) {
-        return "";
+        if (upsalary < 0)
+            return "decrease salary not valid case!";
+        try {
+            DbHandler dbHandler = DbHandler.getInstance();
+            dbHandler.upsalary(upsalary, userId);
+            return "ok";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "err";
     }
 
-    public String transferEmployee(Long userId, Long from, Long to) {
-        return "";
+    public String transferEmployee(Long userId, Long to) {
+        try {
+            DbHandler dbHandler = DbHandler.getInstance();
+            if (dbHandler.transferEmployee(userId, to))
+                return "ok";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "err";
     }
 
     public String killEmployee(Long id) {
-        return "";
+        String errMsg = "Current employee have been not created.";
+        try {
+            DbHandler dbHandler = DbHandler.getInstance();
+            if (dbHandler.deleteEmployee(id))
+                return "ok";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "err";
     }
 }

@@ -1,9 +1,12 @@
 package ssu.org.epam.controller.samples;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssu.org.epam.model.DbHandler;
 import ssu.org.epam.model.Employee;
+import ssu.org.epam.model.Test;
 import ssu.org.epam.service.OfficeManagementService;
 
 import java.sql.SQLException;
@@ -37,47 +40,39 @@ public class OfficeManagemetController {
         return "Bad request. See documentation!";
     }
 
-    @PostMapping(value = "/user", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/user")
     public String addUser(@RequestBody Employee employee){
-        if (officeManagementService.addEmployee(employee))
-            return "Сотрудник добавлен!";
-        else
-            return "Ошибка";
-    }
+        // System.out.println(employee.toString());
+        return officeManagementService.addEmployee(employee);
+    } // TODO add
 
-    // by id
     @PostMapping(value = "/assignEmployee")
     public String assignEmployee(@RequestParam String project,
                                  @RequestParam(name = "id") Long userId){
-        System.out.println(project + " " + userId);
-        return project + " " + userId;
+        return officeManagementService.assignEmployee(project, userId);
     }
 
     @PostMapping(value = "/unassignEmployee")
     public String unassignEmployee(@RequestParam String project,
                                    @RequestParam(name = "id") Long userId){
-        System.out.println(project + " " + userId);
-        return project + " " + userId;
+        return officeManagementService.unassignEmployee(project, userId);
     }
 
     @PostMapping(value = "/upsalary")
     public String setSalary(@RequestParam(name = "id") Long userId,
                             @RequestParam Long upsalary){
-        return "'all users'";
+        return officeManagementService.upsalary(upsalary, userId);
     }
 
     @PostMapping(value = "/transferEmployee")
     public String transferEmployee(@RequestParam(name = "user") Long userId,
-                                   @RequestParam(name = "from", required = false) Long fromRoom,
                                    @RequestParam(name = "to") Long toRoom){
-        System.out.println("'" + userId + "' '" + fromRoom + "' '" + toRoom + "'");
-        return "'" + userId + "' '" + fromRoom + "' '" + toRoom + "'";
+        return officeManagementService.transferEmployee(userId, toRoom);
     }
 
     @PostMapping(value = "/deleteEmployee")
     public String killEmployee(@RequestParam Long id){
-        System.out.println(id);
-        return "'all users'";
+        return officeManagementService.killEmployee(id);
     }
 
     @PostMapping(value = "/admin/db/request")
@@ -87,5 +82,11 @@ public class OfficeManagemetController {
         DbHandler dbHandler = DbHandler.getInstance();
 
         return dbHandler.request(request);
+    }
+
+    @PostMapping(value = "/test")
+    public String test(@RequestBody Test t) {
+        System.out.println(t.toString());
+        return t.toString();
     }
 }
