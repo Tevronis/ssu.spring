@@ -1,8 +1,6 @@
 package ssu.org.epam.controller.samples;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssu.org.epam.model.DbHandler;
 import ssu.org.epam.model.Employee;
@@ -42,9 +40,8 @@ public class OfficeManagemetController {
 
     @PostMapping(value = "/user")
     public String addUser(@RequestBody Employee employee){
-        // System.out.println(employee.toString());
         return officeManagementService.addEmployee(employee);
-    } // TODO add
+    }
 
     @PostMapping(value = "/assignEmployee")
     public String assignEmployee(@RequestParam String project,

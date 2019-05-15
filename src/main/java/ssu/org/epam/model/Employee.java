@@ -1,12 +1,14 @@
 package ssu.org.epam.model;
 
-import java.text.ParseException;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class Employee {
     private Integer id;
@@ -127,7 +129,6 @@ public class Employee {
         matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(this.email);
         if (!matcher.find())
             return "Incorrect email. [A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}";
-
 
         return "ok";
     }

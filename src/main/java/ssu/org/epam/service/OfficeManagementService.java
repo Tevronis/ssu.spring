@@ -12,9 +12,9 @@ import java.util.List;
 public class OfficeManagementService {
 
     public String addEmployee(Employee employee) {
-        String validatin_response = employee.validation();
-        if (!validatin_response.equals("ok")) {
-            return validatin_response;
+        String validate_response = employee.validation();
+        if (!validate_response.equals("ok")) {
+            return validate_response;
         }
         try {
             DbHandler dbHandler = DbHandler.getInstance();
@@ -80,7 +80,6 @@ public class OfficeManagementService {
     }
 
     public String assignEmployee(String project, Long userId) {
-        String errMsg = "Current employee have been not created.";
         try {
             DbHandler dbHandler = DbHandler.getInstance();
             dbHandler.assignEmployee(Project.valueOf(project), userId);
@@ -92,7 +91,6 @@ public class OfficeManagementService {
     }
 
     public String unassignEmployee(String project, Long userId) {
-        String errMsg = "Current employee have been not created.";
         try {
             DbHandler dbHandler = DbHandler.getInstance();
             dbHandler.unassignEmployee(Project.valueOf(project), userId);
@@ -128,7 +126,6 @@ public class OfficeManagementService {
     }
 
     public String killEmployee(Long id) {
-        String errMsg = "Current employee have been not created.";
         try {
             DbHandler dbHandler = DbHandler.getInstance();
             if (dbHandler.deleteEmployee(id))
