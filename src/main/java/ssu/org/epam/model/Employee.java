@@ -1,7 +1,5 @@
 package ssu.org.epam.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -70,7 +68,7 @@ public class Employee {
     }
 
     public String getDateOfBirth() {
-        return dateOfBirth;
+        return calculateAge(dateOfBirth);
     }
 
     public void setDateOfBirth(String dateOfBirth) {
@@ -133,15 +131,7 @@ public class Employee {
         return "ok";
     }
 
-    public String getFIO() {
-        return "Employee{" +
-                "name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", patronymic='" + patronymic + '\'' +
-                '}';
-    }
-
-    public static Integer calculateAge(final String birthday) {
+    public static String calculateAge(final String birthday) {
         try {
             Date date1 = new SimpleDateFormat("dd.MM.yyyy").parse(birthday);
             Calendar dob = Calendar.getInstance();
@@ -154,11 +144,11 @@ public class Employee {
             if (today.get(Calendar.DAY_OF_YEAR) <= dob.get(Calendar.DAY_OF_YEAR)) {
                 age--;
             }
-            return age;
+            return String.valueOf(age);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return -1;
+        return null;
     }
 
     @Override

@@ -1,13 +1,20 @@
 package ssu.org.epam.controller.samples;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ssu.org.epam.model.DbHandler;
+import org.springframework.web.server.ResponseStatusException;
+import ssu.org.epam.service.DBService;
 import ssu.org.epam.model.Employee;
 import ssu.org.epam.model.Test;
 import ssu.org.epam.service.OfficeManagementService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 public class OfficeManagemetController {
@@ -15,18 +22,18 @@ public class OfficeManagemetController {
     private OfficeManagementService officeManagementService;
 
     @GetMapping(value = "/all_user_names")
-    public String getAllUserNames(){
-        return officeManagementService.getAllEmployees(true);
+    public List<Employee> getAllUserNames(){
+        return officeManagementService.getAllEmployeesNames();
     }
 
     @GetMapping(value = "/all_users")
-    public String getAllUsers(){
-        return officeManagementService.getAllEmployees(false);
+    public List<Employee> getAllUsers(){
+        return officeManagementService.getAllEmployees();
     }
 
     @GetMapping(value = "/user")
     @ResponseBody
-    public String getUser(@RequestParam(required = false) Long id,
+    public List<Employee> getUser(@RequestParam(required = false) Long id,
                           @RequestParam(required = false) String name,
                           @RequestParam(required = false) String lastname){
         if (id != null) {
@@ -35,13 +42,27 @@ public class OfficeManagemetController {
         if (name != null && lastname != null) {
             return officeManagementService.getEmployee(name, lastname);
         }
-        return "Bad request. See documentation!";
+        return Collections.emptyList();
     }
 
     @PostMapping(value = "/user")
     public String addUser(@RequestBody Employee employee){
         return officeManagementService.addEmployee(employee);
     }
+
+//    @PostMapping(value = "/user")
+//    public String addUser(@RequestBody HttpServletResponse response){
+//        try {
+//            Employee employee = new Employee();
+//            String json = new ObjectMapper().writeValueAsString(employee);
+//            response.getWriter().write(json);
+//            response.flushBuffer();
+//            return officeManagementService.addEmployee(employee);
+//        }
+//        catch (Exception exc) {
+//            return "error!";
+//        }
+//    }
 
     @PostMapping(value = "/assignEmployee")
     public String assignEmployee(@RequestParam String project,
@@ -76,9 +97,9 @@ public class OfficeManagemetController {
     public String rawRequest(@RequestBody String request) throws SQLException {
         // TODO(menc): add authorization
         System.out.println(request);
-        DbHandler dbHandler = DbHandler.getInstance();
+        DBService dbService = DBService.getInstance();
 
-        return dbHandler.request(request);
+        return dbService.request(request);
     }
 
     @PostMapping(value = "/test")

@@ -1,11 +1,11 @@
 package ssu.org.epam.service;
 
 import org.springframework.stereotype.Service;
-import ssu.org.epam.model.DbHandler;
 import ssu.org.epam.model.Employee;
 import ssu.org.epam.model.Project;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -17,8 +17,8 @@ public class OfficeManagementService {
             return validate_response;
         }
         try {
-            DbHandler dbHandler = DbHandler.getInstance();
-            dbHandler.addEmployee(employee);
+            DBService dbService = DBService.getInstance();
+            dbService.addEmployee(employee);
             return "ok";
         } catch (SQLException e) {
             e.printStackTrace();
@@ -26,63 +26,54 @@ public class OfficeManagementService {
         return "err";
     }
 
-    public String getAllEmployees(Boolean onlyfio) {
-        StringBuilder result = new StringBuilder();
+    public List<Employee> getAllEmployees() {
         try {
-            DbHandler dbHandler = DbHandler.getInstance();
-            List<Employee> resp = dbHandler.getAllEmployees();
-            for (Employee item: resp) {
-                if (onlyfio)
-                    result.append(item.getFIO()).append("\n");
-                else
-                    result.append(item.toString()).append("\n");
-            }
+            DBService dbService = DBService.getInstance();
+            return dbService.getAllEmployees();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return result.toString();
-
+        return Collections.emptyList();
     }
 
-    public String getEmployee(Long id) {
-        String errMsg = "Current employee have been not created.";
+    public List<Employee> getAllEmployeesNames() {
         try {
-            DbHandler dbHandler = DbHandler.getInstance();
-            List<Employee> response = dbHandler.getEmployee(id);
-            StringBuilder sb = new StringBuilder();
-            if (response.isEmpty()) return errMsg;
-            for (Employee item: response)
-                sb.append(item.toString()).append("\n");
-            return sb.toString();
+            DBService dbService = DBService.getInstance();
+            return dbService.getAllEmployeesNames();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return errMsg;
+        return Collections.emptyList();
     }
 
-    public String getEmployee(String name, String lastname) {
-        String errMsg = "Current employee have been not created.";
+    public List<Employee> getEmployee(Long id) {
         try {
-            DbHandler dbHandler = DbHandler.getInstance();
-            List<Employee> response = dbHandler.getEmployee(name, lastname);
-            StringBuilder sb = new StringBuilder();
-            if (response.isEmpty()) return errMsg;
-            for (Employee item: response)
-                sb.append(item.toString()).append("\n");
-            return sb.toString();
+            DBService dbService = DBService.getInstance();
+            return dbService.getEmployee(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return errMsg;
+        return Collections.emptyList();
+    }
+
+    public List<Employee> getEmployee(String name, String lastname) {
+        try {
+            DBService dbService = DBService.getInstance();
+            return dbService.getEmployee(name, lastname);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
     }
 
     public String assignEmployee(String project, Long userId) {
         try {
-            DbHandler dbHandler = DbHandler.getInstance();
-            dbHandler.assignEmployee(Project.valueOf(project), userId);
+            DBService dbService = DBService.getInstance();
+            dbService.assignEmployee(Project.valueOf(project), userId);
             return "ok";
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,8 +83,8 @@ public class OfficeManagementService {
 
     public String unassignEmployee(String project, Long userId) {
         try {
-            DbHandler dbHandler = DbHandler.getInstance();
-            dbHandler.unassignEmployee(Project.valueOf(project), userId);
+            DBService dbService = DBService.getInstance();
+            dbService.unassignEmployee(Project.valueOf(project), userId);
             return "ok";
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,8 +96,8 @@ public class OfficeManagementService {
         if (upsalary < 0)
             return "decrease salary not valid case!";
         try {
-            DbHandler dbHandler = DbHandler.getInstance();
-            dbHandler.upsalary(upsalary, userId);
+            DBService dbService = DBService.getInstance();
+            dbService.upsalary(upsalary, userId);
             return "ok";
         } catch (SQLException e) {
             e.printStackTrace();
@@ -116,8 +107,8 @@ public class OfficeManagementService {
 
     public String transferEmployee(Long userId, Long to) {
         try {
-            DbHandler dbHandler = DbHandler.getInstance();
-            if (dbHandler.transferEmployee(userId, to))
+            DBService dbService = DBService.getInstance();
+            if (dbService.transferEmployee(userId, to))
                 return "ok";
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,8 +118,8 @@ public class OfficeManagementService {
 
     public String killEmployee(Long id) {
         try {
-            DbHandler dbHandler = DbHandler.getInstance();
-            if (dbHandler.deleteEmployee(id))
+            DBService dbService = DBService.getInstance();
+            if (dbService.deleteEmployee(id))
                 return "ok";
         } catch (SQLException e) {
             e.printStackTrace();
