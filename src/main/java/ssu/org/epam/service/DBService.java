@@ -4,6 +4,7 @@ import org.sqlite.JDBC;
 import ssu.org.epam.exception.OfficeException;
 import ssu.org.epam.model.Employee;
 import ssu.org.epam.model.Project;
+import ssu.org.epam.model.Room;
 
 import java.sql.*;
 import java.util.*;
@@ -28,7 +29,6 @@ public class DBService {
 
     public Integer getInt(ResultSet rs, String label) {
         try {
-            System.out.println(label);
             return rs.getInt(label);
         } catch (SQLException e) {
             // e.printStackTrace();
@@ -70,7 +70,6 @@ public class DBService {
     }
 
     public ResultSet getResultSet(String query) throws SQLException {
-        System.out.println(query);
         Statement statement = this.connection.createStatement();
         return statement.executeQuery(query);
     }
@@ -150,7 +149,6 @@ public class DBService {
 
     public void assignEmployee(Project project, Long userId) {
         String sql = "INSERT INTO EmployeeProject(`ID_EMPLOYEE`, `ID_PROJECT`) VALUES(?, ?)";
-        System.out.println(sql);
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.setObject(1, userId);
             statement.setObject(2, project.ordinal() + 1);
@@ -172,8 +170,7 @@ public class DBService {
     }
 
     public void upsalary(Long value, Long userId) {
-        String sql = "UPDATE employee SET salary = salary + ? WHERE id = ?";
-        System.out.println(sql);
+        String sql = "UPDATE employee SET salary = ? WHERE id = ?";
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.setObject(1, value);
             statement.setObject(2, userId);
@@ -183,11 +180,10 @@ public class DBService {
         }
     }
 
-    public void transferEmployee(Long userId, Long to) {
+    public void transferEmployee(Long userId, Room to) {
         String sql = "UPDATE employee SET ID_ROOM = ? WHERE id = ?";
-        System.out.println(sql);
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
-            statement.setObject(1, to);
+            statement.setObject(1, to.ordinal()+1);
             statement.setObject(2, userId);
             statement.execute();
         } catch (SQLException e) {

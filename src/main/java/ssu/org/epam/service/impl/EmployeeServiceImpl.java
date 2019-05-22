@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ssu.org.epam.exception.OfficeException;
 import ssu.org.epam.model.Employee;
 import ssu.org.epam.model.Project;
+import ssu.org.epam.model.Room;
 import ssu.org.epam.service.DBService;
 import ssu.org.epam.service.EmployeeService;
 
@@ -52,31 +53,37 @@ public class EmployeeServiceImpl implements EmployeeService {
         try {
             DBService dbService = DBService.getInstance();
             if (id != null) {
-                return dbService.getEmployee(id);
+                List<Employee> result = dbService.getEmployee(id);
+                if (result.isEmpty())
+                    throw new OfficeException(String.format("Employee with id = %d not existing", id));
+                return result;
             }
             if (name != null && lastname != null) {
-                return dbService.getEmployee(name, lastname);
+                List<Employee> result = dbService.getEmployee(name, lastname);
+                if (result.isEmpty())
+                    throw new OfficeException(String.format("Employee with name, lastname {%s, %s} not existing", name, lastname));
+                return result;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return Collections.emptyList();
+        throw new OfficeException(String.format("Incorrect arguments: id, name, lastname {%d, %s, %s}", id, name, lastname));
     }
 
-    public void assignEmployee(String project, Long userId) {
+    public void assignEmployee(Project project, Long userId) {
         try {
             DBService dbService = DBService.getInstance();
-            dbService.assignEmployee(Project.valueOf(project), userId);
+            dbService.assignEmployee(project, userId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void unassignEmployee(String project, Long userId) {
+    public void unassignEmployee(Project project, Long userId) {
         try {
             DBService dbService = DBService.getInstance();
-            dbService.unassignEmployee(Project.valueOf(project), userId);
+            dbService.unassignEmployee(project, userId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -93,10 +100,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
-    public void transferEmployee(Long userId, Long to) {
+    public void transferEmployee(Long employeeId, Room to) {
         try {
             DBService dbService = DBService.getInstance();
-            dbService.transferEmployee(userId, to);
+            dbService.transferEmployee(employeeId, to);
         } catch (SQLException e) {
             e.printStackTrace();
         }

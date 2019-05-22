@@ -1,6 +1,5 @@
 package ssu.org.epam.model;
 
-import org.springframework.validation.annotation.Validated;
 import ssu.org.epam.exception.OfficeException;
 
 import java.text.SimpleDateFormat;
@@ -118,7 +117,7 @@ public class Employee {
             throw new OfficeException("Incorrect email. [A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}");
     }
 
-    public static String calculateAge(final String birthday) {
+    private static String calculateAge(final String birthday) {
         try {
             Date date1 = new SimpleDateFormat("dd.MM.yyyy").parse(birthday);
             Calendar dob = Calendar.getInstance();
@@ -133,7 +132,7 @@ public class Employee {
             }
             return String.valueOf(age);
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         return null;
     }

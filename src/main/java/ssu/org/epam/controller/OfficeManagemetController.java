@@ -2,6 +2,8 @@ package ssu.org.epam.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ssu.org.epam.model.Project;
+import ssu.org.epam.model.Room;
 import ssu.org.epam.service.DBService;
 import ssu.org.epam.model.Employee;
 import ssu.org.epam.model.Test;
@@ -54,14 +56,15 @@ public class OfficeManagemetController {
 //    }
 
     @PostMapping(value = "/assignEmployee")
-    public void assignEmployee(@RequestParam String project,
+    public void assignEmployee(@RequestParam Project project,
                                  @RequestParam(name = "id") Long userId){
         employeeService.assignEmployee(project, userId);
     }
 
     @PostMapping(value = "/unassignEmployee")
-    public void unassignEmployee(@RequestParam String project,
+    public void unassignEmployee(@RequestParam Project project,
                                    @RequestParam(name = "id") Long userId){
+
         employeeService.unassignEmployee(project, userId);
     }
 
@@ -73,7 +76,7 @@ public class OfficeManagemetController {
 
     @PostMapping(value = "/transferEmployee")
     public void transferEmployee(@RequestParam(name = "user") Long userId,
-                                   @RequestParam(name = "to") Long toRoom){
+                                   @RequestParam(name = "to") Room toRoom){
         employeeService.transferEmployee(userId, toRoom);
     }
 
