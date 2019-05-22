@@ -1,6 +1,7 @@
 package ssu.org.epam.service;
 
 import org.sqlite.JDBC;
+import ssu.org.epam.exception.OfficeException;
 import ssu.org.epam.model.Employee;
 import ssu.org.epam.model.Project;
 
@@ -113,6 +114,7 @@ public class DBService {
                     employee.getRoom().ordinal()+1)), employee);
             result.add(employee);
         }
+
         return result;
     }
 
@@ -128,6 +130,7 @@ public class DBService {
                     employee.getRoom().ordinal()+1)), employee);
             result.add(employee);
         }
+
         return result;
     }
 // ################ PUBLIC POSTS ##################
@@ -180,29 +183,25 @@ public class DBService {
         }
     }
 
-    public Boolean transferEmployee(Long userId, Long to) {
+    public void transferEmployee(Long userId, Long to) {
         String sql = "UPDATE employee SET ID_ROOM = ? WHERE id = ?";
         System.out.println(sql);
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.setObject(1, to);
             statement.setObject(2, userId);
             statement.execute();
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public Boolean deleteEmployee(Long id) {
+    public void deleteEmployee(Long id) {
         String sql = "DELETE FROM Employee WHERE ID = ?";
         try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
             statement.setObject(1, id);
             statement.execute();
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
     }
 }

@@ -1,5 +1,8 @@
 package ssu.org.epam.model;
 
+import org.springframework.validation.annotation.Validated;
+import ssu.org.epam.exception.OfficeException;
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -19,21 +22,6 @@ public class Employee {
     private Project[] projects;
     private Position position;
     private Room room;
-
-    static public Employee createEmployee(Integer id, String name, String surname, String patronymic, String dateOfBirth, String email, Integer salary, Project[] projects, Position position, Room room) {
-        Employee result = new Employee();
-        result.id = id;
-        result.name = name;
-        result.surname = surname;
-        result.patronymic = patronymic;
-        result.dateOfBirth = dateOfBirth;
-        result.email = email;
-        result.salary = salary;
-        result.projects = projects;
-        result.position = position;
-        result.room = room;
-        return result;
-    }
 
     public Integer getId() {
         return id;
@@ -96,6 +84,7 @@ public class Employee {
     }
 
     public void setProjects(Project[] projects) {
+
         this.projects = projects;
     }
 
@@ -118,17 +107,15 @@ public class Employee {
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
-    public String validation() {
+    public void validation() {
         Pattern pat = Pattern.compile("^[0-9]{1,2}.[0-9]{1,2}.[0-9]{4}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pat.matcher(this.dateOfBirth);
         if (!matcher.find())
-            return "Incorrect date. format: [dd.MM.yyyy]";
+            throw new OfficeException("Incorrect date. format: [dd.MM.yyyy]");
 
         matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(this.email);
         if (!matcher.find())
-            return "Incorrect email. [A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}";
-
-        return "ok";
+            throw new OfficeException("Incorrect email. [A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}");
     }
 
     public static String calculateAge(final String birthday) {
