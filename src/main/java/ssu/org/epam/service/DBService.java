@@ -83,7 +83,7 @@ public class DBService {
             mapService.mapEmployee(rs, employee);
             mapService.mapProjects(getResultSet(String.format(
                     "SELECT name FROM Projects WHERE id IN (SELECT id_project FROM EmployeeProject WHERE id_employee = %d)",
-                    employee.getRoom().ordinal()+1)), employee);
+                    employee.getId())), employee);
             result.add(employee);
         }
         return result;

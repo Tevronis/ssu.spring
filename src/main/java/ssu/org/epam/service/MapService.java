@@ -26,12 +26,12 @@ public class MapService {
         Integer id_room =  dbService.getInt(rs, "ID_ROOM");
         Integer id_position =  dbService.getInt(rs, "ID_POSITION");
         if (id_room != null) {
-            mapPosition(dbService.getResultSet(String.format(
-                    "SELECT name FROM Position WHERE id = %d", id_room)), employee);
+            mapRoom(dbService.getResultSet(String.format(
+                    "SELECT name FROM Rooms WHERE id = %d", id_room)), employee);
         }
         if (id_position != null) {
-            mapRoom(dbService.getResultSet(String.format(
-                    "SELECT name FROM Rooms WHERE id = %d", id_position)), employee);
+            mapPosition(dbService.getResultSet(String.format(
+                    "SELECT name FROM Position WHERE id = %d", id_position)), employee);
         }
     }
 

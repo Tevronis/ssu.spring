@@ -41,20 +41,6 @@ public class OfficeManagemetController {
         employeeService.addEmployee(employee);
     }
 
-//    @PostMapping(value = "/user")
-//    public String addUser(@RequestBody HttpServletResponse response){
-//        try {
-//            Employee employee = new Employee();
-//            String json = new ObjectMapper().writeValueAsString(employee);
-//            response.getWriter().write(json);
-//            response.flushBuffer();
-//            return employeeService.addEmployee(employee);
-//        }
-//        catch (Exception exc) {
-//            return "error!";
-//        }
-//    }
-
     @PostMapping(value = "/assignEmployee")
     public void assignEmployee(@RequestParam Project project,
                                  @RequestParam(name = "id") Long userId){
@@ -64,7 +50,6 @@ public class OfficeManagemetController {
     @PostMapping(value = "/unassignEmployee")
     public void unassignEmployee(@RequestParam Project project,
                                    @RequestParam(name = "id") Long userId){
-
         employeeService.unassignEmployee(project, userId);
     }
 
